@@ -2,6 +2,7 @@ from flask import Flask
 
 from .views import base_pages
 from .voting_centre_views import vc_pages
+from .apis import api_pages
 
 
 def create_app():
@@ -22,5 +23,6 @@ def create_app():
 
     app.register_blueprint(base_pages)
     app.register_blueprint(vc_pages, url_prefix='/centres')
+    app.register_blueprint(api_pages, url_prefix='/api/1')
 
     return app
