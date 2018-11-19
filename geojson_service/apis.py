@@ -1,25 +1,29 @@
-from flask import Blueprint
-from flask_restplus import Api, Resource
+from flask.views import MethodView
+from flask_rest_api import Api, Blueprint
 
-from .serialisers import voting_centre_collection
+from .serialisers import VotingCentreGJ
 from .models import db, VotingCentre, District
 
 
-api_pages = Blueprint('api', __name__)
-api = Api(
-    api_pages,
-    title='GeoJSON API',
-    version='1.0.0',
-    description='API to get GeoJSON for voting districts and centres'
+api_pages = Blueprint(
+    'api',
+    __name__,
+    description='Operations of voting centres',
+    url_prefix='/api'
 )
+api = Api()
+
+def register_definitions():
+
+    api.spec.definition('VotingCentre', schema=VotingCentreGJ)
+    api.register_blueprint(api_pages)
 
 
-@api.route('/centres')
-@api.doc('Voting centres')
-class CentresAPI(Resource):
+@api_pages.route('/centres')
+class CentresAPI(MethodView):
     """Voting centres"""
 
-    @api.doc(body='Get a feature collection of Voting Centres')
+    @api_pages.response(VotingCentreGJ(many=True))
     def get(self):
         centres = VotingCentre.query.limit(10).all()
-        return voting_centre_collection.dump(centres).data
+        return centres

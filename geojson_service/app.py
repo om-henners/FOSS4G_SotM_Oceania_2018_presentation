@@ -2,7 +2,6 @@ from flask import Flask
 
 from .views import base_pages
 from .voting_centre_views import vc_pages
-from .apis import api_pages
 
 
 def create_app():
@@ -21,8 +20,13 @@ def create_app():
     from .serializer_utils import ma
     ma.init_app(app)
 
+    from .apis import api, register_definitions
+    api.init_app(app)
+    register_definitions()
+
     app.register_blueprint(base_pages)
     app.register_blueprint(vc_pages, url_prefix='/centres')
-    app.register_blueprint(api_pages, url_prefix='/api/1')
+
+
 
     return app
