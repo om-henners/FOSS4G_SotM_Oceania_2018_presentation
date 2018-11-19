@@ -1,6 +1,7 @@
 from flask import Flask
 
 from .views import base_pages
+from .voting_centre_views import vc_pages
 
 
 def create_app():
@@ -13,6 +14,10 @@ def create_app():
         resp.headers.add("X-Clacks-Overhead", "GNU Terry Pratchett")
         return resp
 
+    from .models import db
+    db.init_app(app)
+
     app.register_blueprint(base_pages)
+    app.register_blueprint(vc_pages)
 
     return app

@@ -1,66 +1,63 @@
 # coding: utf-8
-from sqlalchemy import Column, Float, ForeignKey, Integer, String, Table, text
+from flask_sqlalchemy import SQLAlchemy
 from geoalchemy2.types import Geometry
-from sqlalchemy.orm import relationship
-from sqlalchemy.ext.declarative import declarative_base
 
-Base = declarative_base()
-metadata = Base.metadata
+db = SQLAlchemy()
 
 
-class District(Base):
+class District(db.Model):
     __tablename__ = 'district'
 
-    id = Column(
-        Integer,
+    id = db.Column(
+        db.Integer,
         primary_key=True,
-        server_default=text("nextval('district_id_seq'::regclass)")
+        server_default=db.text("nextval('district_id_seq'::regclass)")
     )
-    name = Column(String, index=True)
-    electors = Column(Integer)
-    projectedp = Column(Integer)
-    members = Column(Integer)
-    electordev = Column(Float(53))
-    projectedd = Column(Float(53))
-    geom = Column(Geometry('MULTIPOLYGON', 4326), index=True)
+    name = db.Column(db.String, index=True)
+    electors = db.Column(db.Integer)
+    projectedp = db.Column(db.Integer)
+    members = db.Column(db.Integer)
+    electordev = db.Column(db.Float(53))
+    projectedd = db.Column(db.Float(53))
+    geom = db.Column(Geometry('MULTIPOLYGON', 4326), index=True)
 
-    voting_centres = relationship(
+    voting_centres = db.relationship(
         'VotingCentre',
         secondary='district_centre_association',
         back_populates='districts'
     )
 
 
-class VotingCentre(Base):
+class VotingCentre(db.Model):
     __tablename__ = 'voting_centre'
 
-    id = Column(
-        Integer,
+    id = db.Column(
+        db.Integer,
         primary_key=True,
-        server_default=text("nextval('voting_centre_id_seq'::regclass)")
+        server_default=db.text("nextval('voting_centre_id_seq'::regclass)")
     )
-    polling_location_name = Column(String, index=True)
-    venue_name = Column(String, index=True)
-    venue_type = Column(String)
-    property_name = Column(String)
-    flat_number = Column(String)
-    street_number = Column(String)
-    street_name = Column(String)
-    street_type = Column(String)
-    locality = Column(String)
-    postcode = Column(Integer)
-    melway_ref = Column(String)
-    geom = Column(Geometry('POINT', 4326), index=True)
+    polling_location_name = db.Column(db.String, index=True)
+    venue_name = db.Column(db.String, index=True)
+    venue_type = db.Column(db.String)
+    property_name = db.Column(db.String)
+    flat_number = db.Column(db.String)
+    street_number = db.Column(db.String)
+    street_name = db.Column(db.String)
+    street_type = db.Column(db.String)
+    locality = db.Column(db.String)
+    postcode = db.Column(db.Integer)
+    melway_ref = db.Column(db.String)
+    geom = db.Column(Geometry('POINT', 4326), index=True)
 
-    districts = relationship(
+    districts = db.relationship(
         'District',
         secondary='district_centre_association',
         back_populates='voting_centres'
     )
 
 
-t_district_centre_association = Table(
-    'district_centre_association', metadata,
-    Column('district_id', ForeignKey('district.id')),
-    Column('voting_centre_id', ForeignKey('voting_centre.id'))
+t_district_centre_association = db.Table(
+    'district_centre_association', db.Model.metadata,
+    db.Column('district_id', db.ForeignKey('district.id')),
+    db.Column('voting_centre_id', db.ForeignKey('voting_centre.id'))
 )
