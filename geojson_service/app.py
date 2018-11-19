@@ -17,7 +17,10 @@ def create_app():
     from .models import db
     db.init_app(app)
 
+    from .serializer_utils import ma
+    ma.init_app(app)
+
     app.register_blueprint(base_pages)
-    app.register_blueprint(vc_pages)
+    app.register_blueprint(vc_pages, url_prefix='/centres')
 
     return app
