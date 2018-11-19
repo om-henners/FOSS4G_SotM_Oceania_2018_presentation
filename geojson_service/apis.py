@@ -25,5 +25,6 @@ class CentresAPI(MethodView):
 
     @api_pages.response(VotingCentreGJ(many=True))
     def get(self):
+        """Get 10 voting centres"""
         centres = VotingCentre.query.limit(10).all()
         return centres
