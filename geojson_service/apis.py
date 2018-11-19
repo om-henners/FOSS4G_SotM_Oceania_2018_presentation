@@ -1,3 +1,4 @@
+from flask import abort
 from flask.views import MethodView
 from flask_rest_api import Api, Blueprint
 
@@ -20,7 +21,7 @@ def register_definitions():
 
 
 @api_pages.route('/centres')
-class CentresAPI(MethodView):
+class CentresList(MethodView):
     """Voting centres"""
 
     @api_pages.response(VotingCentreGJ(many=True))
@@ -28,3 +29,15 @@ class CentresAPI(MethodView):
         """Get 10 voting centres"""
         centres = VotingCentre.query.limit(10).all()
         return centres
+
+
+@api_pages.route('/centres/<int:centre_id>')
+class Centre(MethodView):
+
+    @api_pages.response(VotingCentreGJ)
+    def get(self, centre_id):
+        """Get a voting centre by ID"""
+        item = VotingCentre.query.filter(VotingCentre.id==centre_id).first()
+        if not item:
+            abort(404, f"No voting centre found with ID {centre_id}")
+        return item

@@ -78,7 +78,7 @@ class MarshmallowGeoJSON:
         """
         feature = {
             'type': 'Feature',
-            'geometry': data.pop(self.__geometry_field_name__)
+            'geometry': data.pop(self.__geometry_field_name__, None)
         }
         feature['properties'] = data
         return feature
