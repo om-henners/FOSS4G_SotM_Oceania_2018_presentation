@@ -1,0 +1,4 @@
+{{ fieldnames|join(',') }}
+{% for row in rows -%}
+    {{ row|map('replace', 'NaN', '')|join(',') }}
+{% endfor %}
