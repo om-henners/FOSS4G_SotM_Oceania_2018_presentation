@@ -15,7 +15,7 @@ marshmallow==2.16.3
 marshmallow-sqlalchemy==0.15.0
 psycopg2-binary==2.7.6.1
 pytz==2018.7
-PyYAML==5.1
+PyYAML==5.4
 Shapely==1.6.4.post2
 six==1.11.0
 sqlacodegen==2.0.1
